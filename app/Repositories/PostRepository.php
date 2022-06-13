@@ -93,18 +93,9 @@ class PostRepository extends AbstractRepository
     public function deletePost(Post $post): array
     {
         try {
-            DB::beginTransaction();
-
-            foreach ($post->images as $image) {
-                JetBoxFile::delete($image, 'name', 'posts');
-            }
-            $post->images()->delete();
             $post->delete();
-
-            DB::commit();
             return ['status' => 'Post was deleted successfully'];
         } catch (Throwable $exception) {
-            DB::rollBack();
             return ['error' => "DB Error Code - {$exception->getCode()}"];
         }
     }
